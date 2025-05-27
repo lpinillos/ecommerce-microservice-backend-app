@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: proxy-client
+  namespace: dev
+  labels:
+    app: proxy-client
+spec:
+  selector:
+    app: proxy-client
+  ports:
+  - port: 8900
+    targetPort: 8900
+  type: ClusterIP

@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: cloud-config
+  namespace: dev
+  labels:
+    app: cloud-config
+spec:
+  selector:
+    app: cloud-config
+  ports:
+  - port: 9296
+    targetPort: 9296
+  type: ClusterIP
