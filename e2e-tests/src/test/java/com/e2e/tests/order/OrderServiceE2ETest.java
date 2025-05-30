@@ -20,9 +20,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class OrderServiceE2ETest extends E2ESuite {
 
     @Autowired
-    private TestRestFacade restFacade; // Autowire your facade
+    private TestRestFacade restFacade;
 
-    @Value("${order.service.url}") // This property is set by E2ESuite.Initializer
+    @Value("${order.service.url}")
     private String productServiceUrl;
 
     @Test

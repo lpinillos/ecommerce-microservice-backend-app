@@ -17,12 +17,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class TestRestFacade {
 
-//    @Value("${target.service.host}") // We'll define this property in Initializer
-//    private String host;
-//
-//    @Value("${target.service.port}") // We'll define this property in Initializer
-//    private int port;
-
     private final RestTemplate restTemplate;
 
     @Autowired

@@ -35,18 +35,4 @@ public class FavouriteServiceE2ETest extends E2ESuite {
         assertTrue(response.getStatusCode().is2xxSuccessful(), "Unexpected status code: " + response.getStatusCode());
     }
 
-//    @Test
-//    void shoulgGetFavouriteById() {
-//        String userId = "1";
-//        String productId = "2";
-//        LocalDateTime likeDateTime = LocalDateTime.of(2025, 5, 25, 7, 31, 51, 559551000);
-//        String likeDate = likeDateTime.format(DateTimeFormatter.ofPattern(EXPECTED_BACKEND_DATE_TIME_FORMAT));
-//        ResponseEntity<String> response = restFacade.get(
-//                favouriteServiceUrl + "/favourite-service/api/favourites/" + userId + "/" + productId + "/" + likeDate,
-//                String.class);
-//        System.out.println("Response: " + response.getBody());
-//        System.out.println("Status Code: " + response.getStatusCode());
-//        assertTrue(response.getStatusCode().is2xxSuccessful(), "Unexpected status code: " + response.getStatusCode());
-//    }
-
 }

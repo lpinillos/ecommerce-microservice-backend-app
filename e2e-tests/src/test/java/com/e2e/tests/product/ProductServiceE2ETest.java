@@ -20,22 +20,16 @@ import java.util.Map;
 @SpringBootTest(classes = E2ESuite.class, webEnvironment = SpringBootTest.WebEnvironment.NONE)
 public class ProductServiceE2ETest extends E2ESuite {
 
-    //@Autowired
-    //private TestRestTemplate testRestTemplate;
     @Autowired
-    private TestRestFacade restFacade; // Autowire your facade
+    private TestRestFacade restFacade;
 
-    @Value("${product.service.url}") // This property is set by E2ESuite.Initializer
+    @Value("${product.service.url}")
     private String productServiceUrl;
 
-//    @Value("${user.service.url}") // This property is set by E2ESuite.Initializer
-//    private String userServiceUrl;
 
     @Test
     void shouldGetAllProducts() {
         ResponseEntity<String> response = restFacade.get(productServiceUrl + "/product-service/api/categories", String.class);
-//        System.out.println("Response: " + response.getBody());
-//        System.out.println("Status Code: " + response.getStatusCode());
         assertTrue(response.getStatusCode().is2xxSuccessful(), "Unexpected status code: " + response.getStatusCode());
     }
 }
