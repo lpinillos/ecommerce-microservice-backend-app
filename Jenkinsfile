@@ -192,7 +192,7 @@ pipeline {
 
                     :waitForService
                     set "URL=%~1"
-                    echo ⏳ Esperando a que %URL% esté disponible...
+                    echo Esperando a que %URL% esté disponible...
                     :wait_loop
                     for /f "delims=" %%i in ('curl -s %URL% ^| jq -r ".status"') do (
                         if "%%i"=="UP" goto :eof
@@ -204,100 +204,6 @@ pipeline {
             }
         }
 
-        stage('Run Load Tests with Locust') {
-            when {
-                anyOf {
-                    branch 'stage'
-                }
-            }
-            steps {
-                script {
-                    bat '''
-                    echo 🚀 Levantando Locust para order-service...
-
-                    docker run --rm --network ecommerce-test ^
-                      -v "%CD%\\locust:/mnt" ^
-                      -v "%CD%\\locust-results:/app" ^
-                      luispi18/locust:%IMAGE_TAG% ^
-                      -f /mnt/test/order-service/locustfile.py ^
-                      --host http://order-service-container:8300 ^
-                      --headless -u 10 -r 2 -t 1m ^
-                      --csv order-service-stats --csv-full-history
-
-                    echo 🚀 Levantando Locust para payment-service...
-
-                    docker run --rm --network ecommerce-test ^
-                      -v "%CD%\\locust:/mnt" ^
-                      -v "%CD%\\locust-results:/app" ^
-                      luispi18/locust:%IMAGE_TAG% ^
-                      -f /mnt/test/payment-service/locustfile.py ^
-                      --host http://payment-service-container:8400 ^
-                      --headless -u 10 -r 1 -t 1m ^
-                      --csv payment-service-stats --csv-full-history
-
-                    echo 🚀 Levantando Locust para favourite-service...
-
-                    docker run --rm --network ecommerce-test ^
-                      -v "%CD%\\locust:/mnt" ^
-                      -v "%CD%\\locust-results:/app" ^
-                      luispi18/locust:%IMAGE_TAG% ^
-                      -f /mnt/test/favourite-service/locustfile.py ^
-                      --host http://favourite-service-container:8800 ^
-                      --headless -u 10 -r 2 -t 1m ^
-                      --csv favourite-service-stats --csv-full-history
-
-                    echo ✅ Pruebas completadas
-                    '''
-                }
-            }
-        }
-
-        stage('Run Stress Tests with Locust') {
-            when {
-                anyOf {
-                    branch 'stage'
-                }
-            }
-            steps {
-                script {
-                    bat '''
-                    echo 🔥 Levantando Locust para prueba de estrés...
-
-                    docker run --rm --network ecommerce-test ^
-                    -v "%CD%\\locust:/mnt" ^
-                    -v "%CD%\\locust-results:/app" ^
-                    luispi18/locust:%IMAGE_TAG% ^
-                    -f /mnt/test/order-service/locustfile.py ^
-                    --host http://order-service-container:8300 ^
-                    --headless -u 50 -r 5 -t 1m ^
-                    --csv order-service-stress --csv-full-history
-
-                    docker run --rm --network ecommerce-test ^
-                    -v "%CD%\\locust:/mnt" ^
-                    -v "%CD%\\locust-results:/app" ^
-                    luispi18/locust:%IMAGE_TAG% ^
-                    -f /mnt/test/payment-service/locustfile.py ^
-                    --host http://payment-service-container:8400 ^
-                    --headless -u 50 -r 5 -t 1m ^
-                    --csv payment-service-stress --csv-full-history
-
-                    docker run --rm --network ecommerce-test ^
-                    -v "%CD%\\locust:/mnt" ^
-                    -v "%CD%\\locust-results:/app" ^
-                    luispi18/locust:%IMAGE_TAG% ^
-                    -f /mnt/test/favourite-service/locustfile.py ^
-                    --host http://favourite-service-container:8800 ^
-                    --headless -u 50 -r 5 -t 1m ^
-                    --csv favourite-service-stress --csv-full-history
-
-                    echo ✅ Pruebas de estrés completadas
-                    '''
-                }
-            }
-        }
-
-
-
         stage('Detener y eliminar contenedores') {
             when {
                 anyOf {
@@ -308,7 +214,7 @@ pipeline {
             steps {
                 script {
                     bat """
-                    echo 🛑 Deteniendo y eliminando contenedores...
+                    echo Deteniendo y eliminando contenedores...
 
                     docker rm -f locust || exit 0
                     docker rm -f favourite-service-container || exit 0
@@ -321,7 +227,7 @@ pipeline {
                     docker rm -f service-discovery-container || exit 0
                     docker rm -f zipkin-container || exit 0
 
-                    echo 🧹 Todos los contenedores eliminados
+                    echo Todos los contenedores eliminados
                     """
                 }
             }
@@ -356,7 +262,7 @@ pipeline {
             when { anyOf { branch 'master' } }
             steps {
                 script {
-                    echo "👻👻👻👻👻👻"
+                    echo "Deploy microservice"
 
 //                     SERVICES.split().each { svc ->
 //                         if (!['user-service', ].contains(svc)) {
@@ -376,7 +282,7 @@ pipeline {
             }
             steps {
                 bat '''
-                echo "📝 Generando Release Notes con convco..."
+                echo "Generando Release Notes con convco..."
                 convco changelog > RELEASE_NOTES.md
                 '''
                 archiveArtifacts artifacts: 'RELEASE_NOTES.md', fingerprint: true
@@ -386,13 +292,13 @@ pipeline {
 
     post {
         success {
-            echo "✅ Pipeline OK (${env.BRANCH_NAME}) - ${SPRING_PROFILES_ACTIVE}"
+            echo "Pipeline OK (${env.BRANCH_NAME}) - ${SPRING_PROFILES_ACTIVE}"
         }
         failure {
-            echo "❌ Falló pipeline en ${env.BRANCH_NAME}. Ver logs."
+            echo "Falló pipeline en ${env.BRANCH_NAME}. Ver logs."
         }
         unstable {
-            echo "⚠️ Finalizó con advertencias en ${env.BRANCH_NAME}"
+            echo "Finalizó con advertencias en ${env.BRANCH_NAME}"
         }
     }
 }
