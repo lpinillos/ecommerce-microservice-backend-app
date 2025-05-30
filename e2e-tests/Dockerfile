@@ -1,7 +1,6 @@
 FROM maven:3.9.9-amazoncorretto-17-alpine
 
 WORKDIR /app
-
 COPY . /app
 
 RUN ls -l /app
