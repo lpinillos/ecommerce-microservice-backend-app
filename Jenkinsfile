@@ -9,7 +9,7 @@ pipeline {
     environment {
         DOCKERHUB_USER = 'luispi18'
         DOCKER_CREDENTIALS_ID = 'docker-pwd'
-        SERVICES = '
+        SERVICES = '''
         service-discovery
         cloud-config
         api-gateway
@@ -18,7 +18,7 @@ pipeline {
         order-service
         product-service
         proxy-client
-        locust'
+        locust'''
         K8S_NAMESPACE = 'ecommerce'
     }
 
